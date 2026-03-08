@@ -14,6 +14,7 @@ use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\PacketBroadcaster;
 use pocketmine\network\mcpe\PacketSender;
 use pocketmine\network\mcpe\protocol\PacketPool;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\NetworkSessionManager;
 use pocketmine\player\Player;
 use pocketmine\promise\PromiseResolver;
@@ -96,7 +97,7 @@ class FakePlayerNetworkSession extends NetworkSession{
 		$rp = new ReflectionProperty(NetworkSession::class, 'packetPool');
 		$packetPool = $rp->getValue($this);
 		$packet = $packetPool->getPacket($buffer);
-		$packet->decode(new ByteBufferReader($buffer));
+		$packet->decode(new ByteBufferReader($buffer), ProtocolInfo::CURRENT_PROTOCOL);
 		foreach($this->packet_listeners as $listener){
 			$listener->onPacketSend($packet, $this);
 		}
