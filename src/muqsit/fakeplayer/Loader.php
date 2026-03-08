@@ -138,7 +138,7 @@ final class Loader extends PluginBase implements Listener{
 		$server = $this->getServer();
 		$network = $server->getNetwork();
 		$type_converter = TypeConverter::getInstance();
-		$packet_broadcaster = new StandardPacketBroadcaster($this->getServer());
+		$packet_broadcaster = new StandardPacketBroadcaster($this->getServer(), ProtocolInfo::CURRENT_PROTOCOL);
 		$entity_event_broadcaster = new StandardEntityEventBroadcaster($packet_broadcaster, $type_converter);
 
 		$internal_resolver = new PromiseResolver();
@@ -165,7 +165,7 @@ final class Loader extends PluginBase implements Listener{
 
 		$packet = ResourcePackClientResponsePacket::create(ResourcePackClientResponsePacket::STATUS_COMPLETED, []);
 		$serializer = new ByteBufferWriter();
-		$packet->encode($serializer);
+		$packet->encode($serializer, ProtocolInfo::CURRENT_PROTOCOL);
 		$session->handleDataPacket($packet, $serializer->getData());
 
 		$internal_resolver->getPromise()->onCompletion(function(Player $player) use($info, $session) : void{
