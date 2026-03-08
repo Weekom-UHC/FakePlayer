@@ -16,6 +16,7 @@ use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\ClientboundPacket;
 use pocketmine\network\mcpe\protocol\ModalFormResponsePacket;
 use pocketmine\network\mcpe\protocol\Packet;
+use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\TextPacket;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
@@ -32,7 +33,7 @@ final class FakePlayerCommandExecutor implements CommandExecutor{
 
 	private function sendServerPacket(Player $sender, Packet $packet) : void{
 		$serializer = new ByteBufferWriter();
-		$packet->encode($serializer);
+		$packet->encode($serializer, ProtocolInfo::CURRENT_PROTOCOL);
 		$sender->getNetworkSession()->handleDataPacket($packet, $serializer->getData());
 	}
 
