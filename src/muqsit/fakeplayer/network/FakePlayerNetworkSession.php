@@ -97,10 +97,16 @@ class FakePlayerNetworkSession extends NetworkSession{
 		$rp = new ReflectionProperty(NetworkSession::class, 'packetPool');
 		$packetPool = $rp->getValue($this);
 		$packet = $packetPool->getPacket($buffer);
-		$packet->decode(new ByteBufferReader($buffer), ProtocolInfo::CURRENT_PROTOCOL);
-		foreach($this->packet_listeners as $listener){
-			$listener->onPacketSend($packet, $this);
-		}
+
+		try{
+			$packet = $packetPool->getPacket($buffer);
+			if($packet !== null){
+				$packet->decode(new ByteBufferReader($buffer), ProtocolInfo::CURRENT_PROTOCOL);
+				foreach($this->packet_listeners as $listener){
+					$listener->onPacketSend($packet, $this);
+				}
+			}
+		}catch(\Throwable){}
 	}
 
 	protected function createPlayer(): void{
